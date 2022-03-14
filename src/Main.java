@@ -2,6 +2,8 @@ import java.util.Scanner;
 
 public class Main {
 	
+	private static final int[] BRICK_LENGTHS = {1, 2, 3, 4, 6, 8, 10, 12, 16};
+	
 	public static void main(String[] args) {
 		Scanner in = new Scanner(System.in);
 		int r = in.nextInt(), c = in.nextInt();
@@ -14,28 +16,36 @@ public class Main {
 		}
 		
 		System.out.println(totalCombinations);
+		in.close();
 	}
 	
 	private static int rowCombinations(String row, int c) {
-		int rowCombinations = 1;
-		int i = 0;
+		int rowCombinations = 1, column = 0, colorSegmentStartIndex;
 		
-		while (i < c) {
-			if (row.charAt(i) == '.') {
-				i++;
+		while (column < c) {
+			if (row.charAt(column) == '.') {
+				column++;
 			}
 			else {
-				int colorSegmentStartIndex = i++;
+				colorSegmentStartIndex = column;
 				
-				while (i < c && row.charAt(colorSegmentStartIndex) == row.charAt(i)) {
-					i++;
-				}
+				do {
+					column++;
+				} while (column < c && row.charAt(colorSegmentStartIndex) == row.charAt(column));
 				
-				rowCombinations *= Math.pow(2, i - colorSegmentStartIndex - 1);
+				rowCombinations *= colorSegmentCombinations(column - colorSegmentStartIndex);
 			}
 		}
 		
 		return rowCombinations;
+	}
+	
+	private static int colorSegmentCombinations(int colorSegmentLength) {
+		if (colorSegmentLength <= 4) {
+			return (int) Math.pow(2, colorSegmentLength - 1);
+		}
+		//TODO
+		return 0;
 	}
 	
 }
