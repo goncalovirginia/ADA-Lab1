@@ -1,11 +1,11 @@
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
 	
-	public static void main(String[] args) {
-		Scanner in = new Scanner(System.in);
+	public static void main(String[] args) throws IOException {
+		TurboScanner in = new TurboScanner(System.in);
 		int r = in.nextInt(), c = in.nextInt();
-		in.nextLine();
 		
 		LegoMosaics legoMosaics = new LegoMosaics(r, c);
 		
