@@ -1,27 +1,21 @@
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 public class LegoMosaics {
 	
-	private static final int[] BRICK_LENGTHS = {1, 2, 3, 4, 6, 8, 10, 12, 16};
+	private static final int[] BRICK_LENGTHS = {16, 12, 10, 8, 6, 4, 3, 2, 1};
 	
-	private int[] colorSegmentLengthCombinations;
-	private int rows, columns, totalCombinations, calculatedColorSegmentLengthCombinations;
-	private Set<Integer> brickLengths;
+	private int[] ways;
+	private int rows, columns, totalCombinations, calculatedUpTo;
 	
 	public LegoMosaics(int rows, int columns) {
 		this.rows = rows;
 		this.columns = columns;
-		colorSegmentLengthCombinations = new int[this.columns + 1];
-		colorSegmentLengthCombinations[1] = 1;
-		calculatedColorSegmentLengthCombinations = 1;
+		ways = new int[this.columns + 1];
+		ways[0] = 1;
+		calculatedUpTo = 0;
 		totalCombinations = 1;
-		
-		brickLengths = new HashSet<>();
-		
-		for (int i : BRICK_LENGTHS) {
-			brickLengths.add(i);
-		}
 	}
 	
 	
@@ -47,23 +41,17 @@ public class LegoMosaics {
 	}
 	
 	private int colorSegmentCombinations(int colorSegmentLength) {
-		if (colorSegmentLength > calculatedColorSegmentLengthCombinations) {
-			calculateColorSegmentLengthCombinations(colorSegmentLength);
+		while (calculatedUpTo < colorSegmentLength) {
+			calculatedUpTo++;
+			
+			for (int i : BRICK_LENGTHS) {
+				if (calculatedUpTo - i >= 0) {
+					ways[calculatedUpTo] += ways[calculatedUpTo - i];
+				}
+			}
 		}
 		
-		return colorSegmentLengthCombinations[colorSegmentLength];
-	}
-	
-	private void calculateColorSegmentLengthCombinations(int colorSegmentLength) {
-		do {
-			calculatedColorSegmentLengthCombinations++;
-			colorSegmentLengthCombinations[calculatedColorSegmentLengthCombinations] =
-					colorSegmentLengthCombinations[calculatedColorSegmentLengthCombinations - 1] * 2;
-			
-			if (!brickLengths.contains(calculatedColorSegmentLengthCombinations)) {
-				colorSegmentLengthCombinations[calculatedColorSegmentLengthCombinations]--;
-			}
-		} while (calculatedColorSegmentLengthCombinations < colorSegmentLength);
+		return ways[colorSegmentLength];
 	}
 	
 	public int getTotalCombinations() {
